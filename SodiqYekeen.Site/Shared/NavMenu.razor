@@ -1,37 +1,55 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Sodiq Yekeen</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+@implements IDisposable
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+    <nav id="@Id" class="@Class">
+        <div class="row">
+            <div class="container">
 
-@code {
-    private bool collapseNavMenu = true;
+                <div class="logo">
+                    <a href=""><h4>Sodiq Yekeen</h4></a>
+                </div>
+                <div class="responsive"><i data-icon="m" class="ion-navicon-round"></i></div>
+                <ul class="nav-menu list-unstyled">
+                    <li> <NavLink href="" Match="NavLinkMatch.All">Home</NavLink> </li>
+                    <li> <NavLink href="about-me">About Me</NavLink> </li>
+                    @*<li> <NavLink href="resume">Resume</NavLink> </li>
+                    <li><NavLink href="blog">Blog</NavLink></li>*@
+                </ul>
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+            </div>
+        </div>
+    </nav>
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+
+    @code{
+
+        [Parameter] public string Id { get; set; }
+        [Parameter] public string Class { get; set; }
+
+        protected override void OnInitialized()
+        {
+            NavManager.LocationChanged += LocationChanged;
+        }
+
+        async void LocationChanged(object sender, LocationChangedEventArgs e)
+        {
+            var isHomepage = await JSRuntime.InvokeAsync<int>("window.isHomepage");
+            if (isHomepage == 1)
+            {
+                Id = "main-nav";
+                Class = "";
+            }
+            else
+            {
+                Id = "main-nav-subpage";
+                Class = "subpage-nav";
+            }
+            StateHasChanged();
+        }
+
+        void IDisposable.Dispose()
+        {
+            NavManager.LocationChanged -= LocationChanged;
+        }
     }
-}
