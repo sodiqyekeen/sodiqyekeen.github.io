@@ -2,54 +2,59 @@
 @inject IJSRuntime JSRuntime
 @implements IDisposable
 
-    <nav id="@Id" class="@Class">
-        <div class="row">
-            <div class="container">
+<nav id="@Id" class="@Class">
+    <div class="row">
+        <div class="container">
 
-                <div class="logo">
-                    <a href=""><h4>Sodiq Yekeen</h4></a>
-                </div>
-                <div class="responsive"><i data-icon="m" class="ion-navicon-round"></i></div>
-                <ul class="nav-menu list-unstyled">
-                    <li> <NavLink href="" Match="NavLinkMatch.All">Home</NavLink> </li>
-                    <li> <NavLink href="about-me">About Me</NavLink> </li>
-                    @*<li> <NavLink href="resume">Resume</NavLink> </li>
-                    <li><NavLink href="blog">Blog</NavLink></li>*@
-                </ul>
-
+            <div class="logo">
+                <a href=""><h4>Sodiq Yekeen</h4></a>
             </div>
+            <div class="responsive"><i data-icon="m" class="ion-navicon-round"></i></div>
+            <ul class="nav-menu list-unstyled">
+                <li> <NavLink href="" Match="NavLinkMatch.All">Home</NavLink> </li>
+                <li> <NavLink href="about-me">About Me</NavLink> </li>
+                @*<li> <NavLink  href="resume">Resume</NavLink> </li>
+                    <li><NavLink  href="blog">Blog</NavLink></li>*@
+            </ul>
+
         </div>
-    </nav>
+    </div>
+</nav>
 
 
-    @code{
+@code{
 
-        [Parameter] public string Id { get; set; }
-        [Parameter] public string Class { get; set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Class { get; set; }
 
-        protected override void OnInitialized()
+    protected override void OnInitialized()
+    {
+        NavManager.LocationChanged += LocationChanged;
+        if (!NavManager.Uri.Equals(NavManager.BaseUri))
         {
-            NavManager.LocationChanged += LocationChanged;
-        }
-
-        async void LocationChanged(object sender, LocationChangedEventArgs e)
-        {
-            var isHomepage = await JSRuntime.InvokeAsync<int>("window.isHomepage");
-            if (isHomepage == 1)
-            {
-                Id = "main-nav";
-                Class = "";
-            }
-            else
-            {
-                Id = "main-nav-subpage";
-                Class = "subpage-nav";
-            }
-            StateHasChanged();
-        }
-
-        void IDisposable.Dispose()
-        {
-            NavManager.LocationChanged -= LocationChanged;
+            Id = "main-nav-subpage";
+            Class = "subpage-nav";
         }
     }
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        var isHomepage = await JSRuntime.InvokeAsync<int>("window.isHomepage");
+        if (isHomepage == 1)
+        {
+            Id = "main-nav";
+            Class = "";
+        }
+        else
+        {
+            Id = "main-nav-subpage";
+            Class = "subpage-nav";
+        }
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        NavManager.LocationChanged -= LocationChanged;
+    }
+}

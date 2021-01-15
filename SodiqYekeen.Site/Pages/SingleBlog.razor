@@ -1,0 +1,67 @@
+﻿@page "/single-blog"
+
+@inherits SingleBlogBase
+
+
+<div class="main-content paddsection">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div class="container-main single-main">
+                        <div class="col-md-12">
+                            <div class="block-main mb-30">
+                                @if (!string.IsNullOrEmpty(Post.FeaturedImage))
+                                {
+                                    <img src="images/me.jpg" class="img-responsive" alt="reviews2">
+                                }
+                                else
+                                {
+                                    <img src="https://i.stack.imgur.com/y9DpT.jpg" class="img-responsive" alt="reviews2">
+                                }
+                                <div class="content-main single-post padDiv">
+                                    <div class="journal-txt">
+                                        <h2>@Post.Title</h2>
+                                    </div>
+                                    <div class="post-meta">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="author">by:<a href="#">Sodiq Yekeen</a></li>
+                                            <li class="date">date: @Post.Date.ToString("MMMM d, yyyy")</li>
+                                            @if (Post.Comments != null)
+                                            {
+                                                <li class="commont"><i class="ion-ios-heart-outline"></i>@Post.Comments?.Count() Comments</li>
+                                            }
+
+                                            <li class="commont">category: @Post.Category</li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="text-justify">
+                                        @((MarkupString)Post.Content)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (Post.Comments != null)
+                        {
+                            <div class="col-md-12">
+                                <div class="comments text-left padDiv mb-30">
+                                    @foreach (var comment in Post.Comments)
+                                    {
+                                        <CommentItem />
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-lg-12">
+                            <div class="cmt padDiv">
+                                <CommentForm />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

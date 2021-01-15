@@ -18,11 +18,9 @@ function onBlazorReady() {
         var scroll = $(window).scrollTop();
 
         if (scroll > 100) {
-
             $("#main-nav, #main-nav-subpage").slideDown(700);
             $("#main-nav-subpage").removeClass('subpage-nav');
         } else {
-            //alert("hide");
             $("#main-nav").slideUp(700);
             $("#main-nav-subpage").hide();
             $("#main-nav-subpage").addClass('subpage-nav');
@@ -111,9 +109,6 @@ function onBlazorReady() {
         });
     };
 
-
     // Call the functions
     magnifPopup();
-
 }
-//});

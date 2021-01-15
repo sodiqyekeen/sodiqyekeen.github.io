@@ -72,7 +72,7 @@ a {
     }
 
     a:hover, a:focus {
-        color: #b8a07e;
+        color: #292929;
         text-decoration: underline;
     }
 
@@ -97,17 +97,17 @@ p {
     margin: 25px 0;
     padding: 0;
     font-size: 15px;
-    color: #999999;
+    color: #000;
     line-height: 28px;
 }
 
 ::-moz-selection {
-    background: #b8a07e;
+    background: #292929;
     color: #fff;
 }
 
 ::selection {
-    background: #b8a07e;
+    background: #292929;
     color: #fff;
 }
 
@@ -176,7 +176,7 @@ p {
 }
 
 .hvr-shutter-in-horizontal:hover {
-    background: #b8a07e;
+    background: #292929;
 }
 
 .mb-30 {
@@ -225,8 +225,8 @@ nav ul li {
         line-height: 16px;
         text-transform: uppercase;
         letter-spacing: 0.02em;
-        text-transform: capitalize;
     }
+
 
 .logo {
     float: left;
@@ -303,12 +303,11 @@ nav ul li {
     width: 100%;
     height: auto;
     background: #f7f7f7;
-    /*padding-top: 190px;*/
 }
 
     #about .div-img-bg {
         padding-bottom: 30px;
-        border: 20px solid #b8a07e;
+        border: 20px solid #999999;
     }
 
         #about .div-img-bg .about-img img {
@@ -316,7 +315,7 @@ nav ul li {
             box-shadow: 0px 0px 85px 0px rgba(0, 0, 0, 0.14);
             margin-top: -60px;
             margin-left: 40px;
-            height: 400px;
+            height: auto;
             object-fit: cover;
         }
 
@@ -392,7 +391,7 @@ nav ul li {
 }
 
     .services-carousel .owl-dot.active {
-        background-color: #b8a07e;
+        background-color: #292929;
     }
 
 .owl-nav {
@@ -437,7 +436,7 @@ nav ul li {
             }
 
                 #portfolio .portfolio-list .nav li:hover, #portfolio .portfolio-list .nav li.filter-active {
-                    color: #b8a07e;
+                    color: #292929;
                     -moz-transition: all 0.5s ease-in-out 0s;
                     -ms-transition: all 0.5s ease-in-out 0s;
                     -o-transition: all 0.5s ease-in-out 0s;
@@ -511,7 +510,7 @@ nav ul li {
     }
 
         .journal-block .journal-info .journal-txt h4 a:hover {
-            color: #b8a07e;
+            color: #2929299e;
             -moz-transition: all 0.5s ease-in-out 0s;
             -ms-transition: all 0.5s ease-in-out 0s;
             -o-transition: all 0.5s ease-in-out 0s;
@@ -625,7 +624,7 @@ nav ul li {
                 }
 
                     #footer .socials-media ul li a:hover {
-                        color: #b8a07e;
+                        color: #292929;
                         -moz-transition: all 0.5s ease-in-out 0s;
                         -ms-transition: all 0.5s ease-in-out 0s;
                         -o-transition: all 0.5s ease-in-out 0s;
@@ -675,10 +674,27 @@ nav ul li {
     background-position: center center;
 }
 
+#overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.49);
+    z-index: 2;
+    cursor: pointer;
+}
+
 .spinner {
     width: 40px;
     height: 40px;
-    margin: auto;
+    /*margin: auto;*/
+    position:absolute;
+    top:50%;
+    left:50%;
     background-color: #000;
     border-radius: 100%;
     -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
