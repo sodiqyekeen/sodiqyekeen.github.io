@@ -233,7 +233,7 @@ nav ul li {
 }
 
     .logo img {
-        width: 100px;
+        width: auto;
         height: 50px;
     }
 
@@ -326,7 +326,7 @@ nav ul li {
     }
 
     #about .about-descr .separator {
-        max-width: 80%;
+        /*max-width: 80%;*/
         margin-bottom: 0;
         text-align: left;
     }
@@ -547,6 +547,9 @@ nav ul li {
     width: 100%;
 }
 
+#contact textarea {
+    height:200px;
+}
 
 #contact #sendmessage {
     color: #18d26e;
