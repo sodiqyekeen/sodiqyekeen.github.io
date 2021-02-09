@@ -27,8 +27,10 @@ namespace SodiqYekeen.Site
             //    client.SetDefaultSettings();
             //    client.UseBasicAuthentication("b13f92a47060e40650e90fca1716fe85", "0271d2f81f7aeb11cdd055b1d9b4f53f");
             //});
-            
             await builder.Build().RunAsync();
         }
+
+
+       
     }
 }

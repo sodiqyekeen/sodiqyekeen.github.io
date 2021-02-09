@@ -1,67 +1,101 @@
-﻿@*@page "/single-blog"*@
+﻿@*@page "/blog/{slug}"*@
+@inject HttpClient HttpClient
+@using System.Text.Json.Serialization
+@using System.Text.Json;
 
-@inherits SingleBlogBase
-
+@inject IJSRuntime JSRuntime
 
 <div class="main-content paddsection">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-md-offset-2">
                 <div class="row">
-                    <div class="container-main single-main">
-                        <div class="col-md-12">
-                            <div class="block-main mb-30">
-                                @if (!string.IsNullOrEmpty(Post.FeaturedImage))
-                                {
-                                    <img src="images/me.jpg" class="img-responsive" alt="reviews2">
-                                }
-                                else
-                                {
-                                    <img src="https://i.stack.imgur.com/y9DpT.jpg" class="img-responsive" alt="reviews2">
-                                }
-                                <div class="content-main single-post padDiv">
-                                    <div class="journal-txt">
-                                        <h2>@Post.Title</h2>
-                                    </div>
-                                    <div class="post-meta">
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="author">by:<a href="#">Sodiq Yekeen</a></li>
-                                            <li class="date">date: @Post.Date.ToString("MMMM d, yyyy")</li>
-                                            @if (Post.Comments != null)
-                                            {
-                                                <li class="commont"><i class="ion-ios-heart-outline"></i>@Post.Comments?.Count() Comments</li>
-                                            }
-
-                                            <li class="commont">category: @Post.Category</li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="text-justify">
-                                        @((MarkupString)Post.Content)
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @if (Post.Comments != null)
-                        {
+                    @if (post == null)
+                    {
+                        <p>Loading...</p>
+                    }
+                    else
+                    {
+                        <div class="container-main single-main">
                             <div class="col-md-12">
-                                <div class="comments text-left padDiv mb-30">
-                                    @foreach (var comment in Post.Comments)
+                                <div class="block-main mb-30">
+                                    <img src="@(post.Thumbnail)" class="img-responsive" style="width:100%;" alt="reviews2">
+                                    <div class="content-main single-post padDiv">
+                                        <div class="journal-txt">
+                                            <h2>@post.Title</h2>
+                                        </div>
+                                        <div class="post-meta">
+                                            <ul class="list-unstyled mb-0">
+                                                <li>date: @post.Date.ToString("MMMM d, yyyy")</li>
+                                                @*@if (Post.Comments != null)
                                     {
-                                        <CommentItem />
-                                    }
+                                        <li class="commont"><i class="ion-ios-heart-outline"></i>@Post.Comments?.Count() Comments</li>
+                                    }*@
+
+                                                <li>category: @post.Metadata.Category</li>
+                                                @if (!string.IsNullOrEmpty(post.Metadata.Tags))
+                                                {
+                                                    <li>tags: @post.Metadata.Tags</li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        <div class="text-justify">
+                                            @((MarkupString)post.Content)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        }
-
-                        <div class="col-lg-12">
-                            <div class="cmt padDiv">
-                                <CommentForm />
-                            </div>
+                            <ShareThisPlugins />
+                            @*@if (Post.Comments != null)
+                {
+                    <div class="col-md-12">
+                        <div class="comments text-left padDiv mb-30">
+                            @foreach (var comment in Post.Comments)
+                            {
+                                <CommentItem />
+                            }
                         </div>
                     </div>
+                }*@
+
+                            @*<div class="col-lg-12">
+                    <div class="cmt padDiv">
+                        <CommentForm />
+                    </div>
+                </div>*@
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@code{
+    [Parameter] public string Slug { get; set; }
+
+    Post post = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var url = "https://api.cosmicjs.com/v1/mysite-blog-testing/object/{slug}?pretty=true&hide_metafields=true&read_key=hMMgG6PocvEkP0462EBeyL4qU29vqtkoeG7JXnj3V5fieVaHNl&props=slug,title,content,thumbnail,metadata,created_at";
+        var response = await HttpClient.GetAsync(url.Replace("{slug}", Slug));
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+
+        }
+        else
+        {
+            var _post = JsonSerializer.Deserialize<PostDetail>(await response.Content.ReadAsStringAsync());
+            post = _post.post;
+        }
+
+    }
+
+    public class PostDetail
+    {
+        [JsonPropertyName("object")]
+        public Post post { get; set; }
+    }
+}

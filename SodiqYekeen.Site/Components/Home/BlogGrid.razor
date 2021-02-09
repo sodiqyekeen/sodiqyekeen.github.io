@@ -1,23 +1,17 @@
-﻿
-@if (posts == null)
+﻿@inject HttpClient HttpClient
+@if (postResponse == null)
 {
     <p>Loading...</p>
 }
 else
 {
-    foreach (var post in posts)
+    foreach (var post in postResponse.Posts)
     {
         <div class="col-lg-4 col-md-6">
             <div class="journal-info">
-
-                <a href="#"><img src="@post.FeaturedImage" class="img-responsive" alt="img"></a>
-
+                <NavLink href="@($"blog/{post.Slug}")"><img src="@(post.Thumbnail)" class="img-responsive" alt="img"></NavLink>
                 <div class="journal-txt">
-
-                    <h4><a href="blog-single.html">@post.Title</a></h4>
-                    <p class="separator">
-                        @post.Excerpt
-                    </p>
+                    <h4><NavLink href="@($"blog/{post.Slug}")">@post.Title</NavLink></h4>
                 </div>
             </div>
         </div>
@@ -25,5 +19,12 @@ else
 }
 
 @code {
-    List<Post> posts;
+    PostResponse postResponse = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var url = "https://api.cosmicjs.com/v1/mysite-blog-testing/objects?pretty=true&hide_metafields=true&type=posts&read_key=hMMgG6PocvEkP0462EBeyL4qU29vqtkoeG7JXnj3V5fieVaHNl&limit=20&props=slug,title,thumbnail";
+        postResponse = await HttpClient.GetFromJsonAsync<PostResponse>(url);
+    }
+
 }
