@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace SodiqYekeen.Site.Models
 {
@@ -37,6 +38,17 @@ namespace SodiqYekeen.Site.Models
 
         [JsonPropertyName("metadata")]
         public PostMetadata Metadata { get; set; }
+
+        [JsonIgnore]
+        public string Excerpt => GetExcerpt();
+
+        private string GetExcerpt()
+        {
+            string _excerpt = Content?.Substring(0, 200);
+            List<string> patterns = new List<string>() { @"<script.+?>", @"<video.+?video>", @"<.+?>" };
+            patterns.ForEach(p => _excerpt = Regex.Replace(_excerpt, p, ""));
+            return _excerpt.Substring(0, 100) + "...";
+        }
     }
 
     public class PostMetadata
@@ -46,5 +58,11 @@ namespace SodiqYekeen.Site.Models
 
         [JsonPropertyName("tags")]
         public string Tags { get; set; }
+    }
+
+    public class PostDetail
+    {
+        [JsonPropertyName("object")]
+        public Post Post { get; set; }
     }
 }

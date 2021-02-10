@@ -1,9 +1,6 @@
 ﻿@*@page "/blog/{slug}"*@
-@inject HttpClient HttpClient
-@using System.Text.Json.Serialization
-@using System.Text.Json;
 
-@inject IJSRuntime JSRuntime
+@inject CosmicService CosmicService
 
 @if (notFound)
 {
@@ -83,26 +80,7 @@ else
     Post post = null;
     bool notFound = false;
 
+    protected override async Task OnInitializedAsync() =>
+        (post, notFound) = await CosmicService.GetPostBySlug(Slug);
 
-    protected override async Task OnInitializedAsync()
-    {
-        var url = "https://api.cosmicjs.com/v1/mysite-blog-testing/object/{slug}?pretty=true&hide_metafields=true&read_key=hMMgG6PocvEkP0462EBeyL4qU29vqtkoeG7JXnj3V5fieVaHNl&props=slug,title,content,thumbnail,metadata,created_at";
-        var response = await HttpClient.GetAsync(url.Replace("{slug}", Slug));
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
-            notFound = true;
-        }
-        else
-        {
-            var _post = JsonSerializer.Deserialize<PostDetail>(await response.Content.ReadAsStringAsync());
-            post = _post.post;
-        }
-
-    }
-
-    public class PostDetail
-    {
-        [JsonPropertyName("object")]
-        public Post post { get; set; }
-    }
 }

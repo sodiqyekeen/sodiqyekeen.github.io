@@ -1,12 +1,13 @@
 ﻿@*@page "/blog"*@
 @inject HttpClient HttpClient
+@inject CosmicService CosmicService
 
 <div id="journal-blog" class="text-left  paddsections">
-    <div class="container">
+    @*<div class="container">
         <div class="section-title text-center">
             <h2>journal</h2>
         </div>
-    </div>
+    </div>*@
     <div class="container">
         <div class="journal-block">
             <div class="row">
@@ -24,7 +25,7 @@
                                 <div class="journal-txt">
                                     <h4><NavLink href="@($"blog/{post.Slug}")">@post.Title</NavLink></h4>
                                     <p class="separator">
-                                        To an English person, it will seem like simplified English
+                                        @post.Excerpt
                                     </p>
                                 </div>
                             </div>
@@ -41,9 +42,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var url = "https://api.cosmicjs.com/v1/mysite-blog-testing/objects?pretty=true&hide_metafields=true&type=posts&read_key=hMMgG6PocvEkP0462EBeyL4qU29vqtkoeG7JXnj3V5fieVaHNl&limit=20&props=slug,title,content,thumbnail";
-
-        postResponse = await HttpClient.GetFromJsonAsync<PostResponse>(url);
+        postResponse = await CosmicService.GetPosts();
     }
 
 }

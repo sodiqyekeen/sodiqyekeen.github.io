@@ -1,11 +1,14 @@
 ﻿@inject HttpClient HttpClient
-@if (postResponse == null)
+@inject CosmicService CosmicService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+@if (posts == null)
 {
     <div class="spinner"></div>
 }
 else
 {
-    foreach (var post in postResponse.Posts)
+    foreach (var post in posts)
     {
         <div class="col-lg-4 col-md-6">
             <div class="journal-info">
@@ -21,10 +24,18 @@ else
 @code {
     PostResponse postResponse = null;
 
+    IEnumerable<Post> posts = null;
+
     protected override async Task OnInitializedAsync()
     {
-        var url = "https://api.cosmicjs.com/v1/mysite-blog-testing/objects?pretty=true&hide_metafields=true&type=posts&read_key=hMMgG6PocvEkP0462EBeyL4qU29vqtkoeG7JXnj3V5fieVaHNl&limit=20&props=slug,title,thumbnail";
-        postResponse = await HttpClient.GetFromJsonAsync<PostResponse>(url);
+        if (await localStorage.ContainKeyAsync("gridposts"))
+        {
+            posts = await localStorage.GetItemAsync<IEnumerable<Post>>("gridposts");
+        }
+        else
+        {
+            posts = await CosmicService.GetTopPosts();
+            await localStorage.SetItemAsync("gridposts", posts);
+        }
     }
-
 }
